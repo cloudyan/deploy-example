@@ -10,8 +10,8 @@ WORKDIR /code
 COPY package.json yarn.lock /code/
 RUN yarn
 
-ADD public /code/public
-ADD src /code/src
+ADD public /code/public/
+ADD src /code/src/
 RUN npm run build
 
 # 选择更小体积的基础镜像

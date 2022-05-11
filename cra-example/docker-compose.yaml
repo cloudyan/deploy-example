@@ -13,4 +13,10 @@ services:
       dockerfile: simple.Dockerfile
     ports:
       - 4000:80
+  step:
+    build:
+      context: .
+      dockerfile: step.Dockerfile
+    ports:
+      - 3003:80
 
