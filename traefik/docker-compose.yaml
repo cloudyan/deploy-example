@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  # traefik:
+  #   image: traefik:v2.5
+  #   command: --api.insecure=true --providers.docker
+  #   ports:
+  #     - "80:80"
+  #     - "8080:8080"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+
+  # 改镜像会暴露出自身的 `header` 信息
+  whoami:
+    image: containous/whoami
+    labels:
+      # 设置Host 为 whoami.docker.localhost 进行域名访问
+      - "traefik.http.routers.whoami.rule=Host(`whoami.shanyue.local`)"
+
+  # 反向代理服务
+  reverse-proxy:
+    image: traefik:v2.5
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./acme.json:/acme.json
+      - ./log:/log
+      - /var/run/docker.sock:/var/run/docker.sock
+    container_name: traefik
+    env_file: .env
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.shanyue.local`)"
+      - "traefik.http.routers.api.service=api@internal"
+
+# 使用已存在的 traefik 的 network
+networks:
+  default:
+    name: traefik_default

@@ -1,0 +1,21 @@
+version: "3"
+services:
+  domain:
+    build:
+      context: .
+      dockerfile: router.Dockerfile
+    labels:
+      # 配置域名
+      # traefik.http.routers.<container-name>.rule 配置路由规则
+      # 为 cra 配置我们的自定义域名
+      - "traefik.http.routers.cra.rule=Host(`local.deepjs.cn`)"
+
+      # 配置 TLS
+      - traefik.http.routers.cra.tls=true
+      - traefik.http.routers.cra.tls.certresolver=le
+
+# 一定要与 traefik 在同一网络下
+networks:
+  default:
+    # external:
+    name: traefik_default

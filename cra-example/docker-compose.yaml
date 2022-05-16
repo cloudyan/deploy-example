@@ -19,4 +19,14 @@ services:
       dockerfile: step.Dockerfile
     ports:
       - 3003:80
+  oss:
+    build:
+      context: .
+      dockerfile: oss.Dockerfile
+      args:
+        - ACCESS_KEY_ID
+        - ACCESS_KEY_SECRET
+        - ENDPOINT=oss-cn-hangzhou.aliyuncs.com
+    ports:
+      - 8000:80
 

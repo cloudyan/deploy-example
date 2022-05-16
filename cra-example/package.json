@@ -6,6 +6,8 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "ali-oss": "^6.16.0",
+    "p-queue": "^7.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1",
@@ -17,7 +19,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "serve build"
+    "serve": "serve build",
+    "oss:cli": "ossutil cp -rf --meta Cache-Control:no-cache build oss://deepjs-cn/ && ossutil cp -rf --meta Cache-Control:max-age=31536000 build/static oss://deepjs-cn/static",
+    "oss:rclone": "rclone copy --exclude 'static/**' --header 'Cache-Control: no-cache' build alioss:/deepjs-cn --progress && rclone copy --header 'Cache-Control: max-age=31536000' build/static alioss:/deepjs-cn/static --progress",
+    "oss:script": "node scripts/uploadOSS.mjs",
+    "oss:prune": "node scripts/deleteOSS.mjs"
   },
   "eslintConfig": {
     "extends": [
