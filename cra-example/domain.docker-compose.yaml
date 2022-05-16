@@ -9,6 +9,10 @@ services:
       # traefik.http.routers.<container-name>.rule 配置路由规则
       # 为 cra 配置我们的自定义域名
       - "traefik.http.routers.cra.rule=Host(`local.deepjs.cn`)"
+      # 配置多域名
+      - "traefik.http.routers.cra.rule=Host(`cra.deepjs.cn`)"
+      - "traefik.http.routers.cra-preview.rule=Host(`preview.cra.deepjs.cn`)"
+      - "traefik.http.routers.cra-feature-a.rule=Host(`feature-a.cra.deepjs.cn`)"
 
       # 配置 TLS
       - traefik.http.routers.cra.tls=true
