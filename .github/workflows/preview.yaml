@@ -11,6 +11,7 @@ on:
 jobs:
   preview:
     # 该 Job 在自建的 Runner 中执行
+    # https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners
     runs-on: self-hosted
     environment:
       # 获取 CICD 中的变量: Context
