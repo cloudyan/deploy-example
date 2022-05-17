@@ -16,7 +16,7 @@ services:
     labels:
       # 设置Host 为 whoami.docker.localhost 进行域名访问
       # - "traefik.http.routers.whoami.rule=Host(`whoami.shanyue.local`)"
-      - traefik.http.routers.whoami.rule=Host(`whoami.deepjs.cn`)
+      - "traefik.http.routers.whoami.rule=Host(`whoami.deepjs.cn`)"
       - traefik.http.routers.whoami.tls=true
       - traefik.http.routers.whoami.tls.certresolver=le
 

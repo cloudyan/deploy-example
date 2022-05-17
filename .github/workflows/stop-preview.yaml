@@ -1,0 +1,24 @@
+# 为了避免服务器资源浪费，每次当 PR 被合并或者关闭时，自动停止对应的 Preview 容器
+name: Stop Preview
+
+on:
+  pull_request:
+    types:
+      # 当 feature 分支关闭时，
+      - closed
+
+jobs:
+  stop-preview:
+    runs-on: self-hosted
+    steps:
+      # - name: stop preview
+      #   # 根据 Label 找到对应的容器，并停止服务，因为无需代码，所以用不到 checkout
+      #   run: docker ps -f label="com.docker.compose.service=cra-preview-${COMMIT_REF_NAME}" -q | xargs docker stop
+
+      - uses: actions/checkout@v2
+      - name: stop preview
+        run: |
+          cat preview.docker-compose.yaml | envsubst > docker-compose.yaml
+          docker-compose stop
+        env:
+          COMMIT_REF_NAME: ${{ github.head_ref }}
