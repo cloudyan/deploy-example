@@ -9,12 +9,18 @@ docker-compose up --build simple
 docker-compose up --build --force-recreate simple
 ```
 
-最终的 PUBLIC_URL 为 $Bucket.$Endpoint
+最终的 `PUBLIC_URL` 为 `$Bucket.$Endpoint`
 
 ## 关于 traefik
 
 - https://docs.traefik.cn/
 - https://doc.traefik.io/traefik/
+
+```bash
+cd ./traefik
+
+docker-compose up
+```
 
 
 ## 常见问题
@@ -33,3 +39,7 @@ $ curl --unix-socket /var/run/docker.sock http:/containers/json | jq '.[] | .Lab
 jq: error (at <stdin>:1): Cannot index string with string "Labels"
 ```
 
+文档：
+
+- [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
+- [Compose file Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)

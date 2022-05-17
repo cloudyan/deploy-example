@@ -7,7 +7,7 @@ services:
     labels:
       # 配置域名
       # traefik.http.routers.<container-name>.rule 配置路由规则
-      # 为 cra 配置我们的自定义域名
+      # 为 cra 配置我们的自定义域名 (使用 cra 并没什么影响)
       - "traefik.http.routers.cra.rule=Host(`local.deepjs.cn`)"
       # 配置多域名
       - "traefik.http.routers.cra.rule=Host(`cra.deepjs.cn`)"
