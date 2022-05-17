@@ -134,6 +134,9 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
   - Bundle Chunk Size Limit: 使用 [size-limit](https://github.com/ai/size-limit) 限制打包体积，打包体积过大则无法通过合并。
   - Performance (Lighthouse CI): 使用 [lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) 为每次 PR 通过 Lighthouse 打分，如打分过低则无法通过合并。
   - 针对 `git hooks` 而言，很容易通过 `git commit --no-verify` 而跳过
+- CI 优化
+  - [Cache Action](https://github.com/actions/cache)
+  - [Cache Examples](https://github.com/actions/cache/blob/main/examples.md#node---npm)
 - [使用 needs 字段](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds) 一个 Job 依赖另一个 Job
 - react-scripts [webpack.config.js](https://github.com/facebook/create-react-app/blob/v5.0.0/packages/react-scripts/config/webpack.config.js#L765)
 - [jobs.<job_id>.continue-on-error](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idcontinue-on-error)

@@ -48,19 +48,23 @@ jobs:
   #   # 该 JOB 在自建 Runner 中进行运行
   #   runs-on: self-hosted
   #   steps:
-  #     - name: deployReal
-  #       run: |
-  #         "
-  #         # 构建镜像
-  #         docker build -t cra-deploy-app .
-  #         # 推送镜像
-  #         - docker push cra-deploy-app
-  #         # 拉取镜像并部署，deploy 为一个伪代码命令，在实际项目中可使用 helm、kubectl
-  #         - deploy cra-deploy-app .
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
 
-  #         # 或者通过 kubectl 进行部署
-  #         # - kubectl apply -f app.yaml
+  #     # 构建镜像
+  #     - run: docker build -t cra-deploy-app .
 
-  #         # 或者通过 helm 进行部署
-  #         # - helm install cra-app cra-app-chart
-  #         "
+  #     # 推送镜像
+  #     - run: docker push cra-deploy-app
+
+  #     # 拉取镜像并部署，deploy 为一个伪代码命令，在实际项目中可使用 helm、kubectl
+  #     - run: deploy cra-deploy-app .
+
+  #     # 或者通过 kubectl 进行部署
+  #     - run: kubectl apply -f app.yaml
+
+  #     # 或者通过 helm 进行部署
+  #     - run: helm install cra-app cra-app-chart
+

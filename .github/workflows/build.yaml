@@ -1,28 +1,31 @@
 # 为了试验 CI Cache，此处作为单独的 Workflow
 name: Build
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
       - name: Install Dependencies
         run: yarn
       - name: Build Dependencies
         run: npm run build
+
   build-with-cache:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
       - name: Cache Node Modules
@@ -30,7 +33,7 @@ jobs:
         # 在往下两步，安装依赖时，将有用到
         id: cache-node-modules
         # 使用 cache action 进行目录资源缓存
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           # 对 node_modules 目录进行缓存
           path: node_modules
