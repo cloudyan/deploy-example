@@ -124,3 +124,18 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
   - [Gitlab CICD Workflow](https://docs.gitlab.com/ee/ci/introduction/index.html#basic-cicd-workflow)
   - [Gitlab CI 配置](https://docs.gitlab.com/ee/ci/yaml/gitlab_ci_yaml.html)
   - [Merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- CI
+  - Audit
+    - 使用 npm audit 或者 [snyk](https://snyk.io/) 检查依赖的安全风险。
+    - [如何检测有风险依赖](https://q.shanyue.tech/engineering/742.html#audit)
+  - Quality: 使用 [SonarQube](https://www.sonarqube.org/) 检查代码质量
+  - Container Image: 使用 [trivy](https://github.com/aquasecurity/trivy) 扫描容器镜像安全风险。
+  - End to End: 使用 [Playwright](https://github.com/microsoft/playwright) 进行 UI 自动化测试。
+  - Bundle Chunk Size Limit: 使用 [size-limit](https://github.com/ai/size-limit) 限制打包体积，打包体积过大则无法通过合并。
+  - Performance (Lighthouse CI): 使用 [lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) 为每次 PR 通过 Lighthouse 打分，如打分过低则无法通过合并。
+  - 针对 `git hooks` 而言，很容易通过 `git commit --no-verify` 而跳过
+- [使用 needs 字段](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds) 一个 Job 依赖另一个 Job
+- react-scripts [webpack.config.js](https://github.com/facebook/create-react-app/blob/v5.0.0/packages/react-scripts/config/webpack.config.js#L765)
+- [jobs.<job_id>.continue-on-error](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idcontinue-on-error)
+
+
