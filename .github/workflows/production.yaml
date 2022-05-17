@@ -23,3 +23,44 @@ jobs:
         run: docker-compose -f domain.docker-compose.yaml up --build -d domain
         env:
           COMMIT_REF_NAME: ${{ github.ref_name }}
+
+  # 简单部署个人服务器
+  # deployMyHost:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: deploy self host
+  #       run: |
+  #         ssh root@deepjs.cn "
+  #           # 假设该仓库位于 ~/Documents 目录
+  #           cd ~/Documents/deploy-example
+
+  #           # 拉取最新代码
+  #           get fetch origin master
+  #           git reset --hard origin/master
+
+  #           # 部署
+  #           docker-compose up --build -d
+  #         "
+
+
+  # # 真实的工作环境
+  # deployReal:
+  #   # 该 JOB 在自建 Runner 中进行运行
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: deployReal
+  #       run: |
+  #         "
+  #         # 构建镜像
+  #         docker build -t cra-deploy-app .
+  #         # 推送镜像
+  #         - docker push cra-deploy-app
+  #         # 拉取镜像并部署，deploy 为一个伪代码命令，在实际项目中可使用 helm、kubectl
+  #         - deploy cra-deploy-app .
+
+  #         # 或者通过 kubectl 进行部署
+  #         # - kubectl apply -f app.yaml
+
+  #         # 或者通过 helm 进行部署
+  #         # - helm install cra-app cra-app-chart
+  #         "
