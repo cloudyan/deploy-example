@@ -15,7 +15,7 @@ jobs:
       #   # 根据 Label 找到对应的容器，并停止服务，因为无需代码，所以用不到 checkout
       #   run: docker ps -f label="com.docker.compose.service=cra-preview-${COMMIT_REF_NAME}" -q | xargs docker stop
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: stop preview
         run: |
           cat preview.docker-compose.yaml | envsubst > docker-compose.yaml
