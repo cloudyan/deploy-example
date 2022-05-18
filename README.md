@@ -1,6 +1,8 @@
 # deploy-example
 
-- 山月小 [前端部署十五篇](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MjM5NTk4MDA1MA==&action=getalbum&album_id=2371681511445397504) 操作实践
+- 山月小 [前端部署十五篇](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MjM5NTk4MDA1MA==&action=getalbum&album_id=2371681511445397504) 操作实践 [cra-deploy](https://github.com/shfshanyue/cra-deploy)
+
+![deploy](./deploy.webp)
 
 部署案例
 
