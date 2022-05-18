@@ -116,6 +116,20 @@ on:
 2. 非敏感数据可放置在项目目录 `.env` 中维护
 3. Git/OS 相关通过 CI 注入环境变量
 
+有一个内置于操作系统的命令 `envsubst` 专职于文件内容的环境变量替换，如果系统中无自带 `envsubst` 命令，可使用第三方 [envsubst](https://github.com/a8m/envsubst) 进行替代。
+
+```bash
+cat preview.docker-compose.yaml | COMMIT_REF_NAME=$(git rev-parse --abbrev-ref HEAD) envsubst
+```
+
+## 基于 CICD 的多分支部署
+
+在 Gitlab CI 中可以通过环境变量 `CI_COMMIT_REF_SLUG` 获取，该环境变量还会做相应的分支名替换，如 `feature/A` 到 `feature-a` 的转化。
+
+在 Github Actions 中可以通过环境变量 `GITHUB_REF_NAME/GITHUB_HEAD_REF` 获取。
+
+> **CI_COMMIT_REF_SLUG**: $CI_COMMIT_REF_NAME lowercased, shortened to 63 bytes, and with everything except 0-9 and a-z replaced with -. No leading / trailing -. Use in URLs, host names and domain names.
+
 ## 常见问题
 
 ```bash
@@ -169,6 +183,10 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
       - 可使用该命令，演示在 CI 中的表现
       - `CI=true npm run test`
       - `CI=true npm run build`
+  - environment 部署地址
+    - [Github Actions: environment](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idenvironment)
+    - [Using environments for deployment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment)
+    - [Github Actions Default Environment Variables](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)
 - Gitlab
   - [Gitlab CICD Workflow](https://docs.gitlab.com/ee/ci/introduction/index.html#basic-cicd-workflow)
   - [Gitlab CI 配置](https://docs.gitlab.com/ee/ci/yaml/gitlab_ci_yaml.html)

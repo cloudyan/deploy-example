@@ -9,15 +9,19 @@ on:
 
 # 执行所有的 jobs
 jobs:
+  # github action
   preview:
     # 该 Job 在自建的 Runner 中执行
     # https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners
     runs-on: self-hosted
+
+    # 在 CI 中配置 environment 为期望的部署地址
     environment:
       # 获取 CICD 中的变量: Context
       # https://docs.github.com/en/actions/learn-github-actions/expressions
       name: preview/${{ github.ref_name }}
       url: https://${{ github.ref_name	}}.cra.deepjs.cn
+
     steps:
       # 切出代码，使用该 Action 将可以拉取最新代码
       - uses: actions/checkout@v3
@@ -27,3 +31,18 @@ jobs:
           docker-compose up --build -d cra-preview-${COMMIT_REF_NAME}
         env:
           COMMIT_REF_NAME: ${{ github.ref_name }}
+
+# # 基于 gitlab CI 的多分支部署的简单示例
+# deploy-for-feature:
+#   stage: deploy
+#     only:
+#       refs:
+#         - /^feature-.*$/
+#     script:
+#       # 在 CI 中可直接修改为 docker-compose.yaml，因在 CI 中都是一次性操作
+#       - cat preview.docker-compose.yaml | envsubst > docker-compose.yaml
+#       - docker-compose up --build -d
+#     # 部署环境展示，可在 Pull Request 或者 Merge Request 中直接查看
+#     environment:
+#       name: review/$CI_COMMIT_REF_NAME
+#       url: http://$CI_COMMIT_REF_SLUG.cra.deepjs.cn
