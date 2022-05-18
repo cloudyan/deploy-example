@@ -1,5 +1,6 @@
 name: Production
 
+# https://json.schemastore.org/github-workflow.json
 # 执行 CI 的时机: 当 git push 到 master 分支时
 on:
   push:
@@ -10,6 +11,7 @@ on:
 jobs:
   deploy:
     # 该 Job 在自建的 Runner 中执行
+    # https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners
     runs-on: self-hosted
     environment:
       # 获取 CICD 中的变量: Context

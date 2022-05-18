@@ -229,6 +229,7 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
 - Github
   - [Github Actions](https://github.com/features/actions)
     - [Github Actions 配置](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions)
+    - [json.schema github-workflow](https://json.schemastore.org/github-workflow.json)
     - [Adding self hosted runners](https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners)
     - [Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#about-workflow-events)
   - [Managing a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule)
