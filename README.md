@@ -1,4 +1,11 @@
-# deploy
+# deploy-example
+
+- 山月小 [前端部署十五篇](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MjM5NTk4MDA1MA==&action=getalbum&album_id=2371681511445397504) 操作实践
+
+部署案例
+
+- https://github.com/cloudyan/deploy-example
+- https://github.com/cloudyan/deploy-example
 
 前端部署
 
@@ -129,6 +136,69 @@ cat preview.docker-compose.yaml | COMMIT_REF_NAME=$(git rev-parse --abbrev-ref H
 在 Github Actions 中可以通过环境变量 `GITHUB_REF_NAME/GITHUB_HEAD_REF` 获取。
 
 > **CI_COMMIT_REF_SLUG**: $CI_COMMIT_REF_NAME lowercased, shortened to 63 bytes, and with everything except 0-9 and a-z replaced with -. No leading / trailing -. Use in URLs, host names and domain names.
+
+- github
+- gitlab
+
+## 基于 k8s 的多分支部署
+
+1. 根据分支名作为镜像的 Tag 构建镜像。如 `cra-deploy-app:feature-A`
+2. 根据带有 Tag 的镜像，对每个功能分支进行单独的 Deployment。如 `cra-deployment-feature-A`
+3. 根据 Deployment 配置相对应的 Service。如 `cra-service-feature-A`
+4. 根据 Ingress 对外暴露服务并对不同的 Service 提供不同的域名。如 `feature-A.cra.shanyue.tech`
+
+参见 k8s-preview-app.yaml
+
+## deploy 命令的封装
+
+但是无论基于那种方式的部署，我们总是可以在给它封装一层来简化操作，一来方便运维管理，一来方便开发者直接接入。如把部署抽象为一个命令，我们这里暂时把这个命令命名为 `deploy`，`deploy` 这个命令可能基于 `kubectl/heml` 也有可能基于 `docker-compose`。
+
+该命令最核心 API 如下：
+
+```bash
+$ deploy service-name --host :host
+```
+
+假设要部署一个应用 `cra-feature-A`，设置它的域名为 `feature-A.dev.cra.deepjs.cn`，则这个部署前端的命令为：
+
+```bash
+$ deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
+```
+
+## 初学 kubernetes，并使用 k8s 部署前端应用
+
+前端推荐以下两种途径学习 k8s
+
+- 在本地搭建 [minikube](https://minikube.sigs.k8s.io/docs/)
+  - 在官网 [Interactive Tutorials](https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/) 进行学习，它提供了真实的 minikube 环境
+- [Katacoda 的 Kubernetes Playground](https://www.katacoda.com/courses/kubernetes/playground)
+
+### 术语
+
+- Pod: 是 k8s 中最小的编排单位，通常由一个容器组成。
+- Deployment: 可视为 k8s 中的部署单元，如一个前端/后端项目对应一个 Deployment。
+  - Deployment 可以更好地实现弹性扩容，负载均衡、回滚等功能。它可以管理多个 Pod，并自动对其进行扩容。
+  - [kubernetes v1.23 Deployment](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#deployment-v1-apps)
+  - 参看 k8s-app.yaml, 以下是字段释义
+    - `spec.template`: 指定要部署的 Pod
+    - `spec.replicas`: 指定要部署的个数
+    - `spec.selector`: 定位需要管理的 Pod
+  - 可使用 `kubectl apply` 部署生效后查看 `Pod` 以及 `Deployment` 状态
+    - `kubectl apply -f k8s-app.yaml`
+- Service: 可通过 `spec.selector` 匹配合适的 Deployment 使其能够通过统一的 `Cluster-IP` 进行访问。
+  - 根据 `kubectl get service` 可获取 IP，在 k8s 集群中可通过 `curl 10.102.82.153` 直接访问。
+  - 所有的服务可以通过 `<service>.<namespace>.svc.cluster.local` 进行服务发现。在集群中的任意一个 Pod 中通过域名访问服务
+  - 对外可通过 `Ingress` 或者 `Nginx` 提供服务。
+
+### 回滚
+
+可以使用 `kubectl rollout` 直接进行回滚
+
+```bash
+kubectl rollout undo deployment/nginx-deployment
+```
+
+寻求更复杂的部署策略可前往 [k8s-deployment-strategies](https://github.com/ContainerSolutions/k8s-deployment-strategies)
 
 ## 常见问题
 
