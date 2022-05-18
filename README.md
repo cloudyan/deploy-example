@@ -174,6 +174,10 @@ $ deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
 - 在本地搭建 [minikube](https://minikube.sigs.k8s.io/docs/)
   - 在官网 [Interactive Tutorials](https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/) 进行学习，它提供了真实的 minikube 环境
 - [Katacoda 的 Kubernetes Playground](https://www.katacoda.com/courses/kubernetes/playground)
+- 其他补充资料
+  - [kubernetes](https://kubernetes.io/docs/home/)
+  - [helm](https://helm.sh/docs/) 是 Kubernetes 的包管理器
+  - [prometheus](https://prometheus.io/docs/introduction/overview/) 是一个开源系统监控和警报工具包
 
 ### 术语
 
