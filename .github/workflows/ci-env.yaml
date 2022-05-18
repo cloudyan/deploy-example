@@ -1,5 +1,7 @@
 name: CI Env Check
+
 on: [push]
+
 jobs:
   env:
     runs-on: ubuntu-latest
@@ -8,14 +10,14 @@ jobs:
 
       # Default Environment Variables
       # https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
-      - run: echo $CI
-      - run: echo $GITHUB_REPOSITORY
-      - run: echo $GITHUB_EVENT_NAME
-      - run: echo $GITHUB_SHA
-      - run: echo $GITHUB_REF_NAME
-      - run: echo $GITHUB_HEAD_REF
+      - run: echo $CI # true
+      - run: echo $GITHUB_REPOSITORY  # cloudyan/deploy-example
+      - run: echo $GITHUB_EVENT_NAME  # push
+      - run: echo $GITHUB_SHA         # 3f426bd93b31bd901a5e7b995a6fd94b0a2bf433
+      - run: echo $GITHUB_REF_NAME    # main
+      - run: echo $GITHUB_HEAD_REF    #
       - name: Dump GitHub context
-        run: echo '${{ toJSON(github) }}'
+        run: echo '${{ toJSON(github) }}' # 参见 ../github-env.md
 
       # 如何在 Github Actions 中设置环境变量
       # https://docs.github.com/en/actions/learn-github-actions/environment-variables
@@ -31,8 +33,10 @@ jobs:
       - run: echo $CURRENT_USER
 
       - name: Check GITHUB_ENV
+        # $GITHUB_ENV -> /home/runner/work/_temp/_runner_file_commands/set_env_b07ba886-c9ab-47b6-a6ad-a87da4c9d4d5
         run: |
           echo $GITHUB_ENV
           cat $GITHUB_ENV
       - run: echo CURRENT_USER=$(echo shanyue) >> $GITHUB_ENV
       - run: echo $CURRENT_USER
+

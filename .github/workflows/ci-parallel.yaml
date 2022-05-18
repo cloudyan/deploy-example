@@ -1,5 +1,7 @@
 name: CI Parallel
+
 on: [push]
+
 jobs:
   install:
     runs-on: ubuntu-latest

@@ -94,6 +94,28 @@ on:
 
 通过 CI，我们可以快速反馈，并促进敏捷迭代。这要求我们使用 Git 时尽早提交以发现问题，以功能小点为单位频繁提交发现问题，也避免合并分支时发现重大冲突。
 
+## 环境变量管理
+
+- 在 Github Actions 中，可通过 `env` 设置环境变量，并可通过 `$GITHUB_ENV` 在不同的 Step 共享环境变量。
+- 在 Github Actions 中还可以使用 `Context` 获取诸多上下文信息，可通过 `${{ toJSON(github) }}` 进行获取。
+
+使用示例参见 `ci-env.yaml`
+
+一个项目中的环境变量，可通过以下方式进行设置
+
+1. 本地/宿主机拥有环境变量
+2. CI 拥有环境环境变量，当然 CI Runner 可认为是宿主机，CI 也可传递环境变量 (命令式或者通过 Github/Gitlab 手动操作)
+3. Dockerfile 可传递环境变量
+4. docker-compose 可传递环境变量
+5. kubernetes 可传递环境变量 (env、ConfigMap、secret)
+6. 一些配置服务，如 [consul4](https://github.com/hashicorp/consul)、[vault5](https://github.com/hashicorp/vault)
+
+而对于一些前端项目而言，可如此进行配置
+
+1. 敏感数据放在 `[vault]` 或者 k8s 的 `[secket]` 中注入环境变量，也可通过 Github/Gitlab 设置中进行注入环境变量
+2. 非敏感数据可放置在项目目录 `.env` 中维护
+3. Git/OS 相关通过 CI 注入环境变量
+
 ## 常见问题
 
 ```bash
@@ -120,23 +142,43 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
     - [Adding self hosted runners](https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners)
     - [Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#about-workflow-events)
   - [Managing a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule)
+  - CI
+    - Audit
+      - 使用 npm audit 或者 [snyk](https://snyk.io/) 检查依赖的安全风险。
+      - [如何检测有风险依赖](https://q.shanyue.tech/engineering/742.html#audit)
+    - Quality: 使用 [SonarQube](https://www.sonarqube.org/) 检查代码质量
+    - Container Image: 使用 [trivy](https://github.com/aquasecurity/trivy) 扫描容器镜像安全风险。
+    - End to End: 使用 [Playwright](https://github.com/microsoft/playwright) 进行 UI 自动化测试。
+    - Bundle Chunk Size Limit: 使用 [size-limit](https://github.com/ai/size-limit) 限制打包体积，打包体积过大则无法通过合并。
+    - Performance (Lighthouse CI): 使用 [lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) 为每次 PR 通过 Lighthouse 打分，如打分过低则无法通过合并。
+    - 针对 `git hooks` 而言，很容易通过 `git commit --no-verify` 而跳过
+  - CI 优化
+    - [Cache Action](https://github.com/actions/cache)
+    - [Cache Examples](https://github.com/actions/cache/blob/main/examples.md#node---npm)
+  - ENV
+    - [Github Actions virables](https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables)
+      - CI: true 标明当前环境在 CI 中
+      - GITHUB_REPOSITORY: 仓库名称。例如 cloudyan/deploy-example
+      - GITHUB_EVENT_NAME: 触发当前 CI 的 Webhook 事件名称
+      - GITHUB_SHA: 当前的 Commit Id。3f426bdxxx
+      - GITHUB_REF_NAME: 当前的分支名称。main
+    - 测试、构建等工具会检测如果在 CI 中，则执行更为严格的校验。
+      - `create-react-app` 中 `npm test` 在本地环境为交互式测试命令，而在 CI 中则直接执行。
+      - 在本地环境构建，仅仅警告(Warn) ESLint 的错误，而在 CI 中，如果有 ESLint 问题，直接异常退出。
+    - 可在本地中通过该环境变量进行更为严格的校验。比如在 git hooks 中。
+      - 可使用该命令，演示在 CI 中的表现
+      - `CI=true npm run test`
+      - `CI=true npm run build`
 - Gitlab
   - [Gitlab CICD Workflow](https://docs.gitlab.com/ee/ci/introduction/index.html#basic-cicd-workflow)
   - [Gitlab CI 配置](https://docs.gitlab.com/ee/ci/yaml/gitlab_ci_yaml.html)
   - [Merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-- CI
-  - Audit
-    - 使用 npm audit 或者 [snyk](https://snyk.io/) 检查依赖的安全风险。
-    - [如何检测有风险依赖](https://q.shanyue.tech/engineering/742.html#audit)
-  - Quality: 使用 [SonarQube](https://www.sonarqube.org/) 检查代码质量
-  - Container Image: 使用 [trivy](https://github.com/aquasecurity/trivy) 扫描容器镜像安全风险。
-  - End to End: 使用 [Playwright](https://github.com/microsoft/playwright) 进行 UI 自动化测试。
-  - Bundle Chunk Size Limit: 使用 [size-limit](https://github.com/ai/size-limit) 限制打包体积，打包体积过大则无法通过合并。
-  - Performance (Lighthouse CI): 使用 [lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) 为每次 PR 通过 Lighthouse 打分，如打分过低则无法通过合并。
-  - 针对 `git hooks` 而言，很容易通过 `git commit --no-verify` 而跳过
-- CI 优化
-  - [Cache Action](https://github.com/actions/cache)
-  - [Cache Examples](https://github.com/actions/cache/blob/main/examples.md#node---npm)
+  - ENV
+    - [Gitlab CI virables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
+      - CI: true 标明当前环境在 CI 中
+      - CI_PROJECT_PATH: 仓库名称。如: cloudyan/deploy-example
+      - CI_COMMIT_SHORT_SHA: 当前的 Commit Short Id。3f426bd。
+      - CI_COMMIT_REF_NAME: 当前的分支名称。main
 - [使用 needs 字段](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds) 一个 Job 依赖另一个 Job
 - react-scripts [webpack.config.js](https://github.com/facebook/create-react-app/blob/v5.0.0/packages/react-scripts/config/webpack.config.js#L765)
 - [jobs.<job_id>.continue-on-error](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idcontinue-on-error)
