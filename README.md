@@ -2,14 +2,14 @@
 
 - 山月小 [前端部署十五篇](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MjM5NTk4MDA1MA==&action=getalbum&album_id=2371681511445397504) 操作实践 [cra-deploy](https://github.com/shfshanyue/cra-deploy)
 
-![deploy](./deploy.webp)
-
 部署案例
 
 - https://github.com/cloudyan/deploy-example
 - https://github.com/cloudyan/deploy-example
 
-前端部署
+![deploy](./deploy.webp)
+
+## 前端部署
 
 ```bash
 docker-compose up --build simple
@@ -103,6 +103,49 @@ on:
 
 通过 CI，我们可以快速反馈，并促进敏捷迭代。这要求我们使用 Git 时尽早提交以发现问题，以功能小点为单位频繁提交发现问题，也避免合并分支时发现重大冲突。
 
+
+## CI/CD
+
+- Commit
+  - Git Hooks(Pre Hooks)
+    - Lint
+    - Commit Msg
+- CI Check Jobs
+  - Lint
+  - Test
+  - Bundle
+  - Audit
+  - Image
+  - Preview -> feature-xxx.x.com
+- Code Review
+  - xxx
+- Merge
+- CD
+  - Production Deploy
+    - Deploy
+      - Build Assets
+        - oss -> cdn
+          - no-cache
+          - max-age=31536000
+    - Rollback
+
+优化点
+
+```md
+- webpack
+  - contentHash
+  - deterministic
+  - runtimeChunk
+  - splitChunks
+  - terser
+- HTTP
+  - HSTS
+  - TLS v1.3
+  - OSCP Staping
+  - HTTP2
+  - gzip/Brotli
+```
+
 ## 环境变量管理
 
 - 在 Github Actions 中，可通过 `env` 设置环境变量，并可通过 `$GITHUB_ENV` 在不同的 Step 共享环境变量。
@@ -158,13 +201,13 @@ cat preview.docker-compose.yaml | COMMIT_REF_NAME=$(git rev-parse --abbrev-ref H
 该命令最核心 API 如下：
 
 ```bash
-$ deploy service-name --host :host
+deploy service-name --host :host
 ```
 
 假设要部署一个应用 `cra-feature-A`，设置它的域名为 `feature-A.dev.cra.deepjs.cn`，则这个部署前端的命令为：
 
 ```bash
-$ deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
+deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
 ```
 
 ## 初学 kubernetes，并使用 k8s 部署前端应用
