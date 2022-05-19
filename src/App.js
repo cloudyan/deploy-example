@@ -2,16 +2,23 @@ import logo from './logo.svg';
 import './App.css';
 import { Routes, Route, Link } from 'react-router-dom';
 
+function hello(...rest) {
+  console.log(rest);
+}
+console.log(hello('xiaohan', 'ni', 'hao'));
+
 function Home() {
   return (
     <div>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>当前在 Home 页面1234</h1>
-        <Link to="/about" className="App-link">About</Link>
+        <Link to="/about" className="App-link">
+          About
+        </Link>
       </header>
     </div>
-  )
+  );
 }
 
 function About() {
@@ -20,10 +27,12 @@ function About() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>当前在 About 页面</h1>
-        <Link to="/" className="App-link">Home</Link>
+        <Link to="/" className="App-link">
+          Home
+        </Link>
       </header>
     </div>
-  )
+  );
 }
 
 function App() {
