@@ -3,11 +3,11 @@ kind: Deployment
 metadata:
   name: cra-deployment
 spec:
-  selector:
+  selector:         # 定位需要管理的 Pod
     matchLabels:
       app: cra
-  replicas: 3
-  template:
+  replicas: 3       # 指定要部署的个数
+  template:         # 指定要部署的 Pod
     metadata:
       labels:
         app: cra

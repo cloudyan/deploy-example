@@ -179,7 +179,18 @@ $ deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
   - [helm](https://helm.sh/docs/) 是 Kubernetes 的包管理器
   - [prometheus](https://prometheus.io/docs/introduction/overview/) 是一个开源系统监控和警报工具包
 
+在部署我们项目之前，先通过 `docker build` 构建一个名称为 `cra-deploy-app` 的镜像。
+
+```bash
+$ docker build -t cra-deploy-app -f router.Dockerfile .
+
+# 实际环节需要根据 CommitId 或者版本号作为镜像的 Tag
+$ docker build -t cra-deploy-app:$(git rev-parse --short HEAD) -f router.Dockerfile .
+```
+
 ### 术语
+
+k8s-app.yaml
 
 - Pod: 是 k8s 中最小的编排单位，通常由一个容器组成。
 - Deployment: 可视为 k8s 中的部署单元，如一个前端/后端项目对应一个 Deployment。
@@ -189,11 +200,18 @@ $ deploy cra-feature-A --host feature-A.dev.cra.deepjs.cn
     - `spec.template`: 指定要部署的 Pod
     - `spec.replicas`: 指定要部署的个数
     - `spec.selector`: 定位需要管理的 Pod
-  - 可使用 `kubectl apply` 部署生效后查看 `Pod` 以及 `Deployment` 状态
-    - `kubectl apply -f k8s-app.yaml`
+    - 部署 `kubectl apply -f k8s-app.yaml`
+    - 查看 Pod 以及 Deployment 状态
+      - `kubectl get pods --selector "app=cra" -o wide`
+      - `kubectl get deploy cra-deployment`
 - Service: 可通过 `spec.selector` 匹配合适的 Deployment 使其能够通过统一的 `Cluster-IP` 进行访问。
   - 根据 `kubectl get service` 可获取 IP，在 k8s 集群中可通过 `curl 10.102.82.153` 直接访问。
+    - `curl --head 10.102.82.153`
   - 所有的服务可以通过 `<service>.<namespace>.svc.cluster.local` 进行服务发现。在集群中的任意一个 Pod 中通过域名访问服务
+    - 通过 kebectl exec 可进入任意 Pod 中
+      - `kubectl exec -it cra-deployment-555dc66769-2kk7p sh`
+    - 在 Pod 中执行 curl，进行访问
+      - `curl --head cra-service.default.svc.cluster.local`
   - 对外可通过 `Ingress` 或者 `Nginx` 提供服务。
 
 ### 回滚
@@ -231,7 +249,7 @@ jq: error (at <stdin>:1): Cannot index string with string "Labels"
     - [Github Actions 配置](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions)
     - [json.schema github-workflow](https://json.schemastore.org/github-workflow.json)
     - [Adding self hosted runners](https://docs.github.com/cn/actions/hosting-your-own-runners/adding-self-hosted-runners)
-    - [Events that trigger workflows](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#about-workflow-events)
+    - [Events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#about-workflow-events)
   - [Managing a branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule)
   - CI
     - Audit
