@@ -39,7 +39,7 @@ jobs:
           key: node-modules-${{ hashFiles('yarn.lock') }}
           restore-keys: node-modules-
       - name: Lint(Prettier && ESLint)
-        run: npm run lint
+        run: npm run lint:ci
   test:
     runs-on: ubuntu-latest
     needs: install

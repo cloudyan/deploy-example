@@ -25,8 +25,9 @@ jobs:
         run: yarn
 
       # 在 cra 中，使用 npm run build 来模拟 ESLint
+      # lint 检查不通过，是不能合并的（此处不是格式化代码，而是检查是否存在未格式化的代码报异常）
       - name: Lint(Prettier && ESLint)
-        run: npm run lint
+        run: npm run lint:ci
   test:
     runs-on: ubuntu-latest
     steps:
