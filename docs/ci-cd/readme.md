@@ -1,126 +1,36 @@
 # CI/CD
 
-![deploy](../img/deploy.webp)
+## CI/CD 概念
 
-## CI/CD
+通过软件开发的持续方法，您可以持续构建、测试和部署迭代代码更改。这个迭代过程有助于减少您基于错误或失败的先前版本开发新代码的机会。使用这种方法，从开发新代码到部署，您努力减少人为干预，甚至完全不干预。
 
-每一家 CICD 产品，都有各自的配置方式，但是总体上用法差不多。我们了解下 CICD 的基本术语
+## Continuous Integration
 
-- `Runner`: 用来执行 CI/CD 的构建服务器
-- `workflow/pipeline`: CI/CD 的工作流。(在大部分 CI，如 Gitlab 中为 Pipeline，而 Github 中为 Workflow，但二者实际上还是略有不同)
-- `job`: 任务，比如构建，测试和部署。每个 `workflow/pipeline` 由多个 `job` 组成
+考虑一个应用程序，它的代码存储在 GitLab 的 Git 存储库中。开发人员每天多次推送代码更改。对于每次推送到存储库，您都可以创建一组脚本来自动构建和测试您的应用程序。这些脚本有助于减少您在应用程序中引入错误的机会。
 
-```yaml
-# 仅仅当 master 代码发生变更时，用以自动化部署
-on:
-  push:
-    branches:
-      - master
+这种做法被称为**持续集成**。提交给应用程序的每个更改，甚至是提交给开发分支的更改，都是自动且持续地构建和测试的。这些测试可确保更改通过您为应用程序建立的所有测试、指南和代码合规性标准。
 
-# 仅当 feature/** 分支发生变更时，进行 Preview 功能分支部署 (见 Preview 篇)
-on:
-  pull_request:
-    types:
-      # 当新建了一个 PR 时
-      - opened
-      # 当提交 PR 的分支，未合并前并拥有新的 Commit 时
-      - synchronize
-    branches:
-      - 'feature/**'
+使用**持续集成**作为软件开发方法，对于项目的每次推送，都会自动对代码进行一组检查（规范检查，冒烟测试，单元测试等）。
 
-# 在每天凌晨 0:30 处理一些事情，比如清理多余的 OSS 资源，清理多余的功能分支 Preview (见 Preview 篇)
-on:
-  schedule:
-    - cron:  '30 8 * * *'
-```
+## Continuous Delivery
 
-### CI
+**持续交付**是超越**持续集成**的一步。每次将代码更改推送到代码库时，不仅会构建和测试您的应用程序，而且还会持续部署应用程序。但是，通过**持续交付**，您可以手动触发部署。
 
-CI 流程
+**持续交付**会自动检查代码，但需要人工干预才能手动和战略性地触发更改的部署。
 
-1. Install。依赖安装。
-2. Lint。保障统一的代码风格。
-3. Test。单元测试。
-4. Preview。生成一个供测试人员进行检查的网址。
+## Continuous Deployment
 
-CI 检测时机
+**持续部署**是超越**持续集成**的又一步，类似于持续交付。不同之处在于，您无需手动部署应用程序，而是将其设置为自动部署（不需要人为干预）。
 
-- 功能分支提交后（CI 阶段），进行 Build、Lint、Test、Preview 等，「如未通过 CICD，则无法 Preview，更无法合并到生产环境分支进行上线」
-- 功能分支通过后（CI 阶段），合并到主分支，进行自动化部署。
+## CI/CD 工作流程
 
-分支提交或PR提交
+![CICD-Workflow](../static/image/gitlab_workflow_example.png)
 
-```yaml
-# 当功能分支代码 push 到远程仓库后，进行 CI
-on:
-  push:
-    branches:
-      - 'feature/**'
+## DevOps
 
-# 或
+![devops-arch](../static/image/devops-arch.png)
 
-# 当功能分支代码 push 到远程仓库以及是 Pull Request 后，进行 CI
-on:
-  pull_request:
-    types:
-      # 当新建了一个 PR 时
-      - opened
-      # 当提交 PR 的分支，未合并前并拥有新的 Commit 时
-      - synchronize
-    branches:
-      - 'feature/**'
-```
+参考
 
-通过 CI，我们可以快速反馈，并促进敏捷迭代。这要求我们使用 Git 时尽早提交以发现问题，以功能小点为单位频繁提交发现问题，也避免合并分支时发现重大冲突。
-
-
-## CI/CD
-
-- Commit
-  - Git Hooks(Pre Hooks)
-    - Lint
-    - Commit Msg
-- CI Check Jobs
-  - Lint
-    - prettier + eslint 保障统一的代码风格
-    - 使用 ESLint Plugin 进行代码检查
-  - Test 自动化测试
-    - Smoking test: 冒烟测试
-    - Unit test: 使用 jest 单元测试
-    - End to End: 使用 Playwright 进行 UI 自动化测试
-  - Quality 使用 SonarQube10 检查代码质量
-  - Bundle
-  - Audit 使用 npm audit 或者 snyk 检查依赖的安全风险
-  - Image 图片优化
-  - Container Image: 使用 trivy 扫描容器镜像安全风险
-  - Bundle Chunk Size Limit: 使用 size-limit13 限制打包体积，打包体积过大则无法通过合并。
-  - Performance (Lighthouse CI): 使用 lighthouse CI 为每次 PR 通过 Lighthouse 打分，如打分过低则无法通过合并。
-  - Preview -> feature-xxx.x.com 测试预览
-- Code Review
-  - xxx
-- Merge
-- CD
-  - Production Deploy
-    - Deploy
-      - Build Assets
-        - oss -> cdn
-          - no-cache
-          - max-age=31536000
-    - Rollback
-
-优化点
-
-```md
-- webpack
-  - contentHash
-  - deterministic
-  - runtimeChunk
-  - splitChunks
-  - terser
-- HTTP
-  - HSTS
-  - TLS v1.3
-  - OSCP Staping
-  - HTTP2
-  - gzip/Brotli
-```
+- https://docs.gitlab.com/ee/ci/introduction/
+- [Get a deeper look at GitLab CI/CD](https://youtu.be/l5705U8s_nQ?t=369)

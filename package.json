@@ -25,9 +25,9 @@
     "oss:rclone": "rclone copy --exclude 'static/**' --header 'Cache-Control: no-cache' build alioss:/deepjs-cn --progress && rclone copy --header 'Cache-Control: max-age=31536000' build/static alioss:/deepjs-cn/static --progress",
     "oss:script": "node scripts/uploadOSS.mjs",
     "oss:prune": "node scripts/deleteOSS.mjs",
-    "format": "prettier -w 'src/**/*.{js,ts}'",
-    "format:ci": "prettier -c 'src/**/*.{js,ts}'",
-    "format:diff": "prettier -w 'src/**/*.{js,ts}' && git --no-pager diff && git checkout -- src",
+    "format": "prettier --write 'src/**/*.{js,ts}'",
+    "format:ci": "prettier --check 'src/**/*.{js,ts}'",
+    "format:diff": "prettier --write 'src/**/*.{js,ts}' && git --no-pager diff && git checkout -- src",
     "lint:ci": "npm run format:ci",
     "lint": "npm run format",
     "prepare": "husky install"
@@ -50,13 +50,14 @@
       "last 1 safari version"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+  "lint-staged": {
+    "*.{js,ts}": [
+      "prettier --write --ignore-unknown src/**/*.{js,ts}"
+    ]
   },
   "devDependencies": {
     "husky": "^8.0.1",
+    "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
     "serve": "^13.0.2"
   }

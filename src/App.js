@@ -5,7 +5,8 @@ import { Routes, Route, Link } from 'react-router-dom';
 function hello(...rest) {
   console.log(rest);
 }
-console.log(hello('xiaohan', 'ni', 'hao'));
+
+console.log(hello('xiaohan', 'ni', 'hao'))
 
 function Home() {
   return (
