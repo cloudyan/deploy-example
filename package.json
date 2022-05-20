@@ -25,10 +25,11 @@
     "oss:rclone": "rclone copy --exclude 'static/**' --header 'Cache-Control: no-cache' build alioss:/deepjs-cn --progress && rclone copy --header 'Cache-Control: max-age=31536000' build/static alioss:/deepjs-cn/static --progress",
     "oss:script": "node scripts/uploadOSS.mjs",
     "oss:prune": "node scripts/deleteOSS.mjs",
-    "prettier:format": "prettier -w 'src/**/*.{js,ts}'",
-    "prettier:format:ci": "prettier -c 'src/**/*.{js,ts}'",
-    "lint:ci": "npm run prettier:format:ci",
-    "lint": "npm run prettier:format",
+    "format": "prettier -w 'src/**/*.{js,ts}'",
+    "format:ci": "prettier -c 'src/**/*.{js,ts}'",
+    "format:diff": "prettier -w 'src/**/*.{js,ts}' && git --no-pager diff && git checkout -- src",
+    "lint:ci": "npm run format:ci",
+    "lint": "npm run format",
     "prepare": "husky install"
   },
   "eslintConfig": {
