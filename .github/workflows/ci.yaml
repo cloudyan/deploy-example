@@ -25,8 +25,8 @@ jobs:
         run: yarn
 
       # 在 cra 中，使用 npm run build 来模拟 ESLint
-      - name: ESLint
-        run: npm run build
+      - name: Lint(Prettier && ESLint)
+        run: npm run lint
   test:
     runs-on: ubuntu-latest
     steps:
