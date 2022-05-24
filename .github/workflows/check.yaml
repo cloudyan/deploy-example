@@ -1,26 +1,53 @@
-name: CI Parallel
+name: CI Check
 
-on: [push]
+# CI Check Jobs
+# 1. env
+# 2. install
+# 3. 并发检查
+#   1. lint
+#     1. prettier
+#     2. eslint
+#     3. stylelint
+#     4. commitlint
+#   2. test
+#     1. unit test
+#     2. e2e test
+#     3. Codecov
+#   3. Quality 代码质量检查 SonarQube
+#   4. Audit 依赖安全风险检查 audit/snyk
+#   5. Container Image 容器镜像安全风险检查 trivy
+# 4. build 构建
+#   1. Bundle Chunk Size Limit: 打包体积检查
+#   2. Performance 性能检查 Lighthouse CI
+# 5. preview 预览
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+  push:
+    branches:
+      - main
+      - releases/*
+    paths-ignore:
+      - '**.md'
 
 jobs:
   install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Cache Node Modules
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
-          restore-keys: node-modules-
-      - name: Install Dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn
+          cache: yarn # or npm, pnpm
+
+      - name: Install dependencies
+        run: yarn # or npm ci
+
+
   lint: # prettier eslint stylelint commitlint
     runs-on: ubuntu-latest
     # 通过 needs 字段可设置前置依赖的 Job，比如 install

@@ -2,3 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # npm run lint
+# npx lint-staged
+# npx --no-install lint-staged
+# npx --no-install pretty-quick --staged
+# yarn pretty-quick --staged

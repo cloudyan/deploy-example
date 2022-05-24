@@ -1,9 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
-import { Routes, Route, Link } from 'react-router-dom';
+import logo from './logo.svg'
+import './App.css'
+import { Routes, Route, Link } from 'react-router-dom'
 
 function hello(...rest) {
-  console.log(rest);
+  console.log(rest)
 }
 
 console.log(hello('xiaohan', 'ni', 'hao'))
@@ -19,7 +19,7 @@ function Home() {
         </Link>
       </header>
     </div>
-  );
+  )
 }
 
 function About() {
@@ -33,7 +33,7 @@ function About() {
         </Link>
       </header>
     </div>
-  );
+  )
 }
 
 function App() {
@@ -44,7 +44,7 @@ function App() {
         <Route path="about" element={<About />} />
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
