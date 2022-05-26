@@ -5,7 +5,9 @@
 部署案例
 
 - https://github.com/cloudyan/deploy-example
-- https://github.com/cloudyan/deploy-example
+  - https://cra-example.netlify.app/ [![Netlify Status](https://api.netlify.com/api/v1/badges/d938f8c1-b762-40a0-b528-31cc90ec182d/deploy-status)](https://app.netlify.com/sites/cra-example/deploys)
+  - https://cra-example.vercel.app/ ![Vercel](https://vercelbadge.vercel.app/api/cloudyan/deploy-example)
+
 
 ## 前端部署
 
